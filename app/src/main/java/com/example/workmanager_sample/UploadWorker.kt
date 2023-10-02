@@ -10,7 +10,7 @@ class UploadWorker(context: Context, params: WorkerParameters) : Worker(context,
     override fun doWork(): Result {
         // code to execute deferrable task
         try {
-            for (i in 0..600) {
+            for (i in 0..600000) {
                 Log.i("MYTAG", "Uploading $i")
             }
             return Result.success()

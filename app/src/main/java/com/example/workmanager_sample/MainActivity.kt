@@ -2,6 +2,7 @@ package com.example.workmanager_sample
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
@@ -17,10 +18,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setOneTimeWorkRequest() {
+        val workManager = WorkManager.getInstance(applicationContext)
         val uploadRequest = OneTimeWorkRequest.Builder(UploadWorker::class.java)
             .build()
-        WorkManager.getInstance(applicationContext)
-            .enqueue(uploadRequest)
+        workManager.enqueue(uploadRequest)
+        workManager.getWorkInfoByIdLiveData(uploadRequest.id).observe(this) {
+            findViewById<TextView>(R.id.textView).text = it.state.name
+        }
     }
 
 }
