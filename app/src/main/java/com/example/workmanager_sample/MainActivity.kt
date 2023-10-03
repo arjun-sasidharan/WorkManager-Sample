@@ -39,7 +39,22 @@ class MainActivity : AppCompatActivity() {
             .setConstraints(constraints)
             .setInputData(data)
             .build()
-        workManager.enqueue(uploadRequest)
+
+        val filterRequest = OneTimeWorkRequest.Builder(FilteringWorker::class.java)
+            .build()
+
+        val compressingRequest = OneTimeWorkRequest.Builder(CompressingWorker::class.java)
+            .build()
+
+//        workManager.enqueue(uploadRequest)
+
+        // sequential chaining
+        workManager
+            .beginWith(filterRequest)
+            .then(compressingRequest)
+            .then(uploadRequest)
+            .enqueue()
+
         workManager.getWorkInfoByIdLiveData(uploadRequest.id).observe(this) {
             findViewById<TextView>(R.id.textView).text = it.state.name
             if (it.state.isFinished) {
