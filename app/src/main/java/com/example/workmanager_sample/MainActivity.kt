@@ -46,11 +46,25 @@ class MainActivity : AppCompatActivity() {
         val compressingRequest = OneTimeWorkRequest.Builder(CompressingWorker::class.java)
             .build()
 
+        val downloadingRequest = OneTimeWorkRequest.Builder(DownloadingWorker::class.java)
+            .build()
+
 //        workManager.enqueue(uploadRequest)
 
-        // sequential chaining
+//        // sequential chaining
+//        workManager
+//            .beginWith(filterRequest)
+//            .then(compressingRequest)
+//            .then(uploadRequest)
+//            .enqueue()
+
+        // parallel chaining
+        val parallelWorks = mutableListOf<OneTimeWorkRequest>()
+        parallelWorks.add(downloadingRequest)
+        parallelWorks.add(filterRequest)
+
         workManager
-            .beginWith(filterRequest)
+            .beginWith(parallelWorks)
             .then(compressingRequest)
             .then(uploadRequest)
             .enqueue()

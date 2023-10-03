@@ -10,7 +10,7 @@ class CompressingWorker(context: Context, params: WorkerParameters) : Worker(con
     override fun doWork(): Result {
         // code to execute deferrable task
         return try {
-            for (i in 0..600) {
+            for (i in 0..200) {
                 Log.i("MYTAG", "Compressing $i")
             }
             Result.success()
